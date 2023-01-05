@@ -80,12 +80,22 @@ def get_favorties(planet_id, user_id):
         db.session.add(user1)
         db.session.commit()
         return "ok", 200
-
-    fav_planes = json.loads(user1.favorite_planets)
-    user1.favorite_planes.append(planet_id)
-    user1.favorite_planets = json.dumps(fav_planes)
+    fav_planets = json.loads(user1.favorite_planets)
+    user1.favorite_planets.append(planet_id)
+    user1.favorite_planets = json.dumps(fav_planets)
     db.session.commit()
     return "planet added", 200
+
+@app.route('/favorite/planets/<planet_id>/<user_id>', methods = ['DELETE'])
+def get_favorties(planet_id, user_id):
+    user1 = User.query.get(user_id)
+    if user1 is None:
+        return "ok", 200
+    fav_planets = json.loads(user1.favorite_planets)
+    fav_planets.remove(planet_id)
+    user1.favorite_planets = json.dumps(fav_planets)
+    db.session.commit()
+    return"planet removed", 200
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
